@@ -7,9 +7,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_health import health
 from sentence_transformers import SentenceTransformer
+from dotenv import load_dotenv
 
 # To force the GPU usage: spacy.require_gpu()
 spacy.prefer_gpu()
+
+# Parse environment variables.
+# variable and its value in the .envdefault file will be set, only if the variable is missing or empty in the current enviroment.
+load_dotenv(".envdefault", override=False)
 
 # Supported languages and corresponding model names
 LM_MAP = {
@@ -18,7 +23,7 @@ LM_MAP = {
     }
 
 # Load models
-MODELS = {LM_MAP[lang]: SentenceTransformer(os.environ.get("ASSETS_PATH") + '/' + LM_MAP[lang]) for lang in os.environ.get("APP_LANG").split(" ")}
+MODELS = {LM_MAP[lang]: SentenceTransformer(os.environ.get("ASSETS_PATH_IN_CONTAINER") + '/' + LM_MAP[lang]) for lang in os.environ.get("APP_LANG").split(" ")}
 print(f"Loaded {len(MODELS)} models: {MODELS.keys()}")
 
 @spacy.registry.misc("get_model")

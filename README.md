@@ -21,51 +21,51 @@ With our proposed stack [https://github.com/linto-ai/linto-platform-stack](https
 # Develop
 
 ## Build and run
-1 Create a named volume for storaging models.
-```bash
-sudo docker volume create linto-platform-nlp-assets
-```
-
-2 Download models into `assets/` on the host machine, make sure that `git-lfs`: [Git Large File Storage](https://git-lfs.github.com/) is installed and availble at `/usr/local/bin/git-lfs`.
+1 Download models into `./assets` on the host machine (can be stored in other places), make sure that `git-lfs`: [Git Large File Storage](https://git-lfs.github.com/) is installed and availble at `/usr/local/bin/git-lfs`.
 ```bash
 cd linto-platform-nlp-keyphrase-extraction/
 bash scripts/download_models.sh
 ```
 
-3 Copy downloaded models into created volume `linto-platform-nlp-assets`
+2 configure running environment variables
 ```bash
-sudo docker container create --name cp_helper -v linto-platform-nlp-assets:/root hello-world
-sudo docker cp assets/* cp_helper:/root
-sudo docker rm cp_helper
+mv .envdefault .env
+# cat .envdefault
+# APP_LANG=fr en | Running language of application, "fr en", "fr", etc.
+# ASSETS_PATH_ON_HOST=./assets | Storage path of models on host. (only applicable when docker-compose is used)
+# ASSETS_PATH_IN_CONTAINER=/app/assets | Volume mount point of models in container. (only applicable when docker-compose is used)
+# WORKER_NUMBER=3 | Number of processing workers. (only applicable when docker-compose is used)
 ```
 
 4 Build image
 ```bash
 sudo docker build --tag lintoai/linto-platform-keyphrase-extraction:latest .
 ```
+or
+```bash
+sudo docker-compose build
+```
 
-5 Run container (with GPU), make sure that [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installing-on-ubuntu-and-debian) and GPU driver are installed.
+5 Run container with GPU support, make sure that [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installing-on-ubuntu-and-debian) and GPU driver are installed.
 ```bash
 sudo docker run --gpus all \
---rm -d -p 80:80 \
--v linto-platform-nlp-assets:/app/assets:ro \
---env APP_LANG="fr en" \
-lintoai/linto-platform-keyphrase-extraction:latest
+--rm -p 80:80 \
+-v $PWD/assets:/app/assets:ro \
+--env-file .env \
+lintoai/linto-platform-keyphrase-extraction:latest \
+--workers 1
+```
+or
+```bash
+sudo docker-compose up
 ```
 <details>
   <summary>Check running with CPU only setting</summary>
   
-  ```bash
-sudo docker run \
---rm -d -p 80:80 \
--v linto-platform-nlp-assets:/app/assets:ro \
---env APP_LANG="fr en" \
-lintoai/linto-platform-keyphrase-extraction:latest
-  ```
+  - remove `--gpus all` from the first command.
+  - remove `runtime: nvidia` from the `docker-compose.yml` file.
 </details>
-To specify running language of the container, modify APP_LANG="fr en", APP_LANG="fr", etc.
 
-To lanche with multiple workers, add `--workers INTEGER` in the end of the above command.
 
 6 Navigate to `http://localhost/docs` or `http://localhost/redoc` in your browser, to explore the REST API interactively. See the examples for how to query the API.
 
