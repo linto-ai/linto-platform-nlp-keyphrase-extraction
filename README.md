@@ -39,7 +39,7 @@ mv .envdefault .env
 
 4 Build image
 ```bash
-sudo docker build --tag lintoai/linto-platform-keyphrase-extraction:latest .
+sudo docker build --tag lintoai/linto-platform-nlp-keyphrase-extraction:latest .
 ```
 or
 ```bash
@@ -52,7 +52,7 @@ sudo docker run --gpus all \
 --rm -p 80:80 \
 -v $PWD/assets:/app/assets:ro \
 --env-file .env \
-lintoai/linto-platform-keyphrase-extraction:latest \
+lintoai/linto-platform-nlp-keyphrase-extraction:latest \
 --workers 1
 ```
 or
