@@ -5,7 +5,7 @@ This repository is for building a Docker image for LinTO's NLP service: Keyphras
 
 linto-platform-nlp-keyphrase-extraction is backed by [spaCy](https://spacy.io/) v3.0+ featuring transformer-based pipelines, thus deploying with GPU support is highly recommeded for inference efficiency.
 
-LinTo's NLP services adopt the basic design concept of spaCy: [component and pipeline](https://spacy.io/usage/processing-pipelines), componets are decoupled from the service and can be easily re-used in other projects, components are organised into pipelines for realising specific NLP tasks. 
+LinTo's NLP services adopt the basic design concept of spaCy: [component and pipeline](https://spacy.io/usage/processing-pipelines), components are decoupled from the service and can be easily re-used in other projects, components are organised into pipelines for realising specific NLP tasks. 
 
 This service uses [FastAPI](https://fastapi.tiangolo.com/) to serve custom spaCy's components as pipelines:
 - `kpe`: Keyphrase Extraction
@@ -34,7 +34,7 @@ mv .envdefault .env
 # APP_LANG=fr en | Running language of application, "fr en", "fr", etc.
 # ASSETS_PATH_ON_HOST=./assets | Storage path of models on host. (only applicable when docker-compose is used)
 # ASSETS_PATH_IN_CONTAINER=/app/assets | Volume mount point of models in container. (only applicable when docker-compose is used)
-# WORKER_NUMBER=3 | Number of processing workers. (only applicable when docker-compose is used)
+# WORKER_NUMBER=1 | Number of processing workers. (only applicable when docker-compose is used)
 ```
 
 4 Build image
