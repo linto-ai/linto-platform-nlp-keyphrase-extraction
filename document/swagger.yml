@@ -61,8 +61,8 @@ components:
       properties:
         text:
           type: string
-        end:
-          score: float
+        score:
+          type: float
     batch:
       type: object
       properties:
@@ -76,7 +76,7 @@ components:
     responsemodel:
       type: object
       properties:
-        ner:
+        kpe:
           type: array
           items:
             $ref: '#/components/schemas/batch'

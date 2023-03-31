@@ -15,6 +15,7 @@ def kpe_task(lang: str, texts: List[str], component_cfg: Dict = {}):
     """Process a batch of articles and return the Keyphrases predicted by the
     given model. Each record in the data should have a key "text".
     """
+    logger.info('KPE task received')
 
     # Check language availability
     if lang in LM_MAP.keys():
